@@ -89,6 +89,10 @@ namespace citygml {
             COT_WindowSurface               = 1ll<< 52,
             COT_DoorSurface                 = 1ll<< 53,
 
+            COT_BuildingSubdivision         = 1ll<< 54,
+            COT_Storey                      = 1ll<< 55,
+            COT_PointCloud                  = 1ll<< 56,
+
             COT_All                         = 0xFFFFFFFFFFFFFFFFll
         };
 
