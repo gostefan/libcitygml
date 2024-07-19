@@ -36,6 +36,8 @@ namespace citygml {
 
         CityObject* m_model;
         std::function<void(CityObject*)> m_callback;
+        AttributeType m_lastGenericAttributeType;
+        std::string m_lastGenericAttributeValue;
         std::string m_lastAttributeName;
         AttributeType m_lastAttributeType;
 
