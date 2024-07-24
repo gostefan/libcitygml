@@ -106,12 +106,21 @@ namespace citygml {
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, WallSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, RoofSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, GroundSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, WallSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, RoofSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, GroundSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, ClosureSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, FloorSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, InteriorWallSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, CeilingSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterCeilingSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterFloorSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, FloorSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, InteriorWallSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, CeilingSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, OuterCeilingSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, OuterFloorSurface));
+                typeIDTypeMap.insert(HANDLE_TYPE(CON, OtherConstruction));
                 typeIDTypeMap.insert(HANDLE_TYPE(GRP, CityObjectGroup));
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, ReliefFeature));
                 typeIDTypeMap.insert(HANDLE_TYPE(DEM, ReliefComponent));
@@ -356,7 +365,8 @@ namespace citygml {
                    || node == NodeType::CON_FillingSurfaceNode
                    || node == NodeType::CON_WindowSurfaceNode
                    || node == NodeType::CON_DoorSurfaceNode
-                   || node == NodeType::CORE_PointCloudNode) {
+                   || node == NodeType::CORE_PointCloudNode
+                   || node == NodeType::CON_OtherConstructionNode) {
             setParserForNextElement(new CityObjectElementParser(m_documentParser, m_factory, m_logger, [this](CityObject* obj) {
                                         m_model->addChildCityObject(obj);
                                     }));
@@ -378,7 +388,8 @@ namespace citygml {
             }
         } else if (node == NodeType::GEN_Lod0TerrainIntersectionNode
                    || node == NodeType::WTR_Lod0MultiCurveNode
-                   || node == NodeType::WTR_Lod0MultiSurfaceNode) {
+                   || node == NodeType::WTR_Lod0MultiSurfaceNode
+                   || node == NodeType::CORE_Lod0MultiSurfaceNode) {
             
             parseGeometryForLODLevel(0);
         } else if (node == NodeType::BLDG_Lod0FootPrintNode) {
@@ -397,6 +408,8 @@ namespace citygml {
                    || node == NodeType::TRANS_Lod1MultiSurfaceNode
                    || node == NodeType::WTR_Lod1MultiCurveNode
                    || node == NodeType::WTR_Lod1MultiSurfaceNode
+                   || node == NodeType::CORE_Lod0MultiSurfaceNode
+                   || node == NodeType::CORE_Lod1MultiSurfaceNode
                    || node == NodeType::WTR_Lod1SolidNode) {
 
             parseGeometryForLODLevel(1);
@@ -415,11 +428,15 @@ namespace citygml {
                    || node == NodeType::GEN_Lod3MultiCurveNode
                    || node == NodeType::GEN_Lod0MultiSurfaceNode
                    || node == NodeType::GEN_Lod2MultiSurfaceNode
-                   || node == NodeType::GEN_Lod3MultiSurfaceNode) {
+                   || node == NodeType::GEN_Lod3MultiSurfaceNode
+                   || node == NodeType::CORE_Lod0MultiSurfaceNode
+                   || node == NodeType::CORE_Lod2MultiSurfaceNode
+                   || node == NodeType::CORE_Lod3MultiSurfaceNode) {
 
             parseGeometryForLODLevel(2);
         } else if (node == NodeType::BLDG_Lod3MultiCurveNode
                    || node == NodeType::BLDG_Lod3MultiSurfaceNode
+                   || node == NodeType::CORE_Lod3MultiSurfaceNode
                    || node == NodeType::BLDG_Lod3SolidNode
                    || node == NodeType::BLDG_Lod3TerrainIntersectionNode
                    || node == NodeType::GEN_Lod3TerrainIntersectionNode
@@ -431,6 +448,7 @@ namespace citygml {
 
             parseGeometryForLODLevel(3);
         } else if (node == NodeType::BLDG_Lod4MultiCurveNode
+                   || node == NodeType::BLDG_Lod4SolidNode
                    || node == NodeType::BLDG_Lod4MultiSurfaceNode
                    || node == NodeType::BLDG_Lod4SolidNode
                    || node == NodeType::BLDG_Lod4TerrainIntersectionNode
@@ -601,6 +619,7 @@ namespace citygml {
                     || node == NodeType::CON_DoorSurfaceNode
                     || node == NodeType::BLDG_BuildingSubdivisionNode
                     || node == NodeType::BLDG_StoreyNode
+                    || node == NodeType::CON_OtherConstructionNode
                     || node == NodeType::GEN_Lod1GeometryNode
                     || node == NodeType::GEN_Lod2GeometryNode
                     || node == NodeType::GEN_Lod3GeometryNode
@@ -691,6 +710,10 @@ namespace citygml {
                     || node == NodeType::GEN_Lod0MultiSurfaceNode
                     || node == NodeType::GEN_Lod2MultiSurfaceNode
                     || node == NodeType::GEN_Lod3MultiSurfaceNode
+                    || node == NodeType::CORE_Lod0MultiSurfaceNode
+                    || node == NodeType::CORE_Lod1MultiSurfaceNode
+                    || node == NodeType::CORE_Lod2MultiSurfaceNode
+                    || node == NodeType::CORE_Lod3MultiSurfaceNode
                     || node == NodeType::CORE_BoundaryNode) {
 
             return true;
