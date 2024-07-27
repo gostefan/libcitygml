@@ -11,7 +11,7 @@ IF( LIBCITYGML_USE_OPENGL)
 ELSE( LIBCITYGML_USE_OPENGL )
   SET( GLU_INCLUDE_PATH "" )
 ENDIF( LIBCITYGML_USE_OPENGL )
-FIND_PACKAGE( Xerces REQUIRED )
+FIND_PACKAGE( XercesC REQUIRED )
 
 # gdal library
 OPTION(LIBCITYGML_USE_GDAL "Set to ON to build libcitygml with GDAL library so that it supports coordinates transformations." ON)
@@ -50,7 +50,6 @@ configure_file("${CMAKE_MODULE_PATH}/citygml_api.h.in" ${CMAKE_CURRENT_SOURCE_DI
 SET(EXPORT_HEADER_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/citygml/citygml_export.h)
 
 INCLUDE_DIRECTORIES(    ${CMAKE_CURRENT_SOURCE_DIR}/include
-                        ${XERCESC_INCLUDE}
                         ${GLU_INCLUDE_PATH}
                         ${GDAL_INCLUDE_DIR})
 
@@ -225,7 +224,8 @@ generate_export_header(citygml
                        EXPORT_MACRO_NAME LIBCITYGML_EXPORT
                        EXPORT_FILE_NAME ${EXPORT_HEADER_FILE_NAME})
 
-TARGET_LINK_LIBRARIES( ${target} PUBLIC ${XERCESC_LIBRARIES} )
+TARGET_LINK_LIBRARIES( ${target} PUBLIC XercesC::XercesC)
+
 if(LIBCITYGML_USE_OPENGL)
   TARGET_LINK_LIBRARIES( ${target} PUBLIC ${OPENGL_LIBRARIES} )
 endif(LIBCITYGML_USE_OPENGL)
