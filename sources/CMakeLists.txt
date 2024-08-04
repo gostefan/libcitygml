@@ -12,10 +12,19 @@ IF( LIBCITYGML_USE_OPENGL)
 ELSE( LIBCITYGML_USE_OPENGL )
   SET( GLU_INCLUDE_PATH "" )
 ENDIF( LIBCITYGML_USE_OPENGL )
-FIND_PACKAGE( XercesC )
-IF( NOT XercesC_FOUND )
-  FIND_PACKAGE( Xerces REQUIRED )
-ENDIF( NOT XercesC_FOUND)
+
+OPTION(CITYGML_USE_LIBXML2 "Set to ON to build libcitygml with LibXml2 library rather than Xerces-c." OFF)
+
+IF( NOT CITYGML_USE_LIBXML2 )
+	FIND_PACKAGE( XercesC )
+	IF( NOT XercesC_FOUND )
+	FIND_PACKAGE( Xerces REQUIRED )
+	ENDIF( NOT XercesC_FOUND)
+ENDIF( NOT CITYGML_USE_LIBXML2 )
+
+IF( CITYGML_USE_LIBXML2 )
+	FIND_PACKAGE( LibXml2 REQUIRED )
+ENDIF( CITYGML_USE_LIBXML2 )
 
 # gdal library
 OPTION(LIBCITYGML_USE_GDAL "Set to ON to build libcitygml with GDAL library so that it supports coordinates transformations." ON)
@@ -56,9 +65,15 @@ SET(EXPORT_HEADER_FILE_NAME ${CMAKE_CURRENT_SOURCE_DIR}/include/citygml/citygml_
 INCLUDE_DIRECTORIES(    ${CMAKE_CURRENT_SOURCE_DIR}/include
                         ${GLU_INCLUDE_PATH}
                         ${GDAL_INCLUDE_DIR})
-IF ( NOT XercesC_FOUND )
+IF ( NOT CITYGML_USE_LIBXML2 AND NOT XercesC_FOUND )
   INCLUDE_DIRECTORIES(  ${XERCESC_INCLUDE})
-ENDIF ( NOT XercesC_FOUND )
+ENDIF ( NOT CITYGML_USE_LIBXML2 AND NOT XercesC_FOUND )
+
+IF ( CITYGML_USE_LIBXML2 )
+  SET(PARSER_SOURCE src/parser/parserlibxml2.cpp)
+ELSE ( CITYGML_USE_LIBXML2 )
+  SET(PARSER_SOURCE src/parser/parserxercesc.cpp)
+ENDIF ( CITYGML_USE_LIBXML2 )
 
 SET(SOURCES
   src/citygml/attributesmap.cpp
@@ -96,7 +111,7 @@ SET(SOURCES
   src/parser/geocoordinatetransformer.cpp
 
   src/parser/citygmldocumentparser.cpp
-  src/parser/parserxercesc.cpp
+  ${PARSER_SOURCE}
   src/parser/citygmlelementparser.cpp
   src/parser/elementparser.cpp
 
@@ -232,11 +247,15 @@ generate_export_header(citygml
                        EXPORT_MACRO_NAME LIBCITYGML_EXPORT
                        EXPORT_FILE_NAME ${EXPORT_HEADER_FILE_NAME})
 
-if(XercesC_FOUND)
-  TARGET_LINK_LIBRARIES( ${target} PRIVATE XercesC::XercesC)
-else(XercesC_FOUND)
-  TARGET_LINK_LIBRARIES( ${target} PRIVATE ${XERCESC_LIBRARIES} )
-endif(XercesC_FOUND)
+if(CITYGML_USE_LIBXML2)
+    TARGET_LINK_LIBRARIES( ${target} PRIVATE LibXml2::LibXml2)
+else(CITYGML_USE_LIBXML2)
+  if(XercesC_FOUND)
+    TARGET_LINK_LIBRARIES( ${target} PRIVATE XercesC::XercesC)
+  else(XercesC_FOUND)
+    TARGET_LINK_LIBRARIES( ${target} PRIVATE ${XERCESC_LIBRARIES} )
+  endif(XercesC_FOUND)
+endif(CITYGML_USE_LIBXML2)
 
 if(LIBCITYGML_USE_OPENGL)
   TARGET_LINK_LIBRARIES( ${target} PRIVATE ${OPENGL_LIBRARIES} )
