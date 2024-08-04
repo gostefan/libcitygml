@@ -28,6 +28,7 @@
 #include "parser/citygmldocumentparser.h"
 #include "parser/documentlocation.h"
 #include "parser/attributes.h"
+#include "parser/stdlogger.h"
 
 #include <xercesc/sax2/DefaultHandler.hpp>
 #include <xercesc/sax/Locator.hpp>
@@ -204,48 +205,6 @@ private:
 // Parsing methods
 namespace citygml
 {
-
-    class StdLogger : public CityGMLLogger {
-    public:
-
-        StdLogger(LOGLEVEL level = LOGLEVEL::LL_ERROR):CityGMLLogger(level){
-
-        };
-
-        void log(LOGLEVEL level, const std::string& message, const char* file, int line) const override
-        {
-            std::ostream& stream = level == LOGLEVEL::LL_ERROR ? std::cerr : std::cout;
-
-            switch(level) {
-            case LOGLEVEL::LL_DEBUG:
-                stream << "DEBUG";
-                break;
-            case LOGLEVEL::LL_WARNING:
-                stream << "WARNING";
-                break;
-            case LOGLEVEL::LL_TRACE:
-                stream << "TRACE";
-                break;
-            case LOGLEVEL::LL_ERROR:
-                stream << "ERROR";
-                break;
-            case LOGLEVEL::LL_INFO:
-                stream << "INFO";
-                break;
-            }
-
-            if (file) {
-                stream << " [" << file;
-                if (line > -1) {
-                    stream << ":" << line;
-                }
-                stream << "]";
-            }
-
-            stream << " " << message << std::endl;
-        }
-    };
-
     std::mutex xerces_init_mutex;
     std::atomic_bool xerces_initialized;
 
