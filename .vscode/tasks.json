@@ -1,0 +1,45 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "cmake configure xerces-c",
+			"type": "shell",
+			"command": "cmake -DLIBCITYGML_TESTS=ON -DLIBCITYGML_OSGPLUGIN=OFF -DLIBCITYGML_USE_OPENGL=ON -DLIBCITYGML_USE_GDAL=OFF -DLIBCITYGML_STATIC_CRT=OFF -DCITYGML_USE_LIBXML2=OFF -DCMAKE_SYSTEM_PREFIX_PATH=C:/dev/git/xerces-c-3.2.5/xerces-c-3.2.5/install -DCMAKE_INSTALL_PREFIX=./installDir -B build .",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "cmake configure libxml2",
+			"type": "shell",
+			"command": "cmake -DLIBCITYGML_TESTS=ON -DLIBCITYGML_OSGPLUGIN=OFF -DLIBCITYGML_USE_OPENGL=ON -DLIBCITYGML_USE_GDAL=OFF -DLIBCITYGML_STATIC_CRT=OFF -DCITYGML_USE_LIBXML2=ON -DCMAKE_SYSTEM_PREFIX_PATH=C:/dev/git/libxml2/install -DCMAKE_INSTALL_PREFIX=./installDir -B build .",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "cmake build",
+			"type": "shell",
+			"command": "cmake --build build",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "cmake install",
+			"type": "shell",
+			"command": "cmake --install build --config=Debug",
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		}
+	]
+}
