@@ -249,6 +249,8 @@ generate_export_header(citygml
 
 if(CITYGML_USE_LIBXML2)
     TARGET_LINK_LIBRARIES( ${target} PRIVATE LibXml2::LibXml2)
+	add_compile_definitions("LIBXML_STATIC")
+	TARGET_LINK_LIBRARIES( ${target} PRIVATE "bcrypt.lib")
 else(CITYGML_USE_LIBXML2)
   if(XercesC_FOUND)
     TARGET_LINK_LIBRARIES( ${target} PRIVATE XercesC::XercesC)
