@@ -419,6 +419,7 @@ namespace citygml {
         } else if (node == NodeType::BLDG_Lod1MultiCurveNode
                    || node == NodeType::BLDG_Lod1MultiSurfaceNode
                    || node == NodeType::BRID_Lod1MultiSurfaceNode
+                   || node == NodeType::VEG_Lod1MultiSurfaceNode
                    || node == NodeType::BLDG_Lod1SolidNode
                    || node == NodeType::BLDG_Lod1TerrainIntersectionNode
                    || node == NodeType::GEN_Lod1TerrainIntersectionNode
@@ -435,6 +436,7 @@ namespace citygml {
         } else if (node == NodeType::BLDG_Lod2MultiCurveNode
                    || node == NodeType::BLDG_Lod2MultiSurfaceNode
                    || node == NodeType::BRID_Lod2MultiSurfaceNode
+                   || node == NodeType::VEG_Lod2MultiSurfaceNode
                    || node == NodeType::BLDG_Lod2SolidNode
                    || node == NodeType::BLDG_Lod2TerrainIntersectionNode
                    || node == NodeType::GEN_Lod2TerrainIntersectionNode
@@ -460,6 +462,7 @@ namespace citygml {
         } else if (node == NodeType::BLDG_Lod3MultiCurveNode
                    || node == NodeType::BLDG_Lod3MultiSurfaceNode
                    || node == NodeType::BRID_Lod3MultiSurfaceNode
+                   || node == NodeType::VEG_Lod3MultiSurfaceNode
                    || node == NodeType::CORE_Lod3MultiSurfaceNode
                    || node == NodeType::BLDG_Lod3SolidNode
                    || node == NodeType::BLDG_Lod3TerrainIntersectionNode
@@ -473,6 +476,7 @@ namespace citygml {
             parseGeometryForLODLevel(3);
         } else if (node == NodeType::BLDG_Lod4MultiCurveNode
                    || node == NodeType::BLDG_Lod4SolidNode
+                   || node == NodeType::VEG_Lod4MultiSurfaceNode
                    || node == NodeType::BLDG_Lod4MultiSurfaceNode
                    || node == NodeType::BRID_Lod4MultiSurfaceNode
                    || node == NodeType::BLDG_Lod4SolidNode
@@ -761,7 +765,11 @@ namespace citygml {
                     || node == NodeType::BRID_Lod1MultiSurfaceNode
                     || node == NodeType::BRID_Lod2MultiSurfaceNode
                     || node == NodeType::BRID_Lod3MultiSurfaceNode
-                    || node == NodeType::BRID_Lod4MultiSurfaceNode) {
+                    || node == NodeType::BRID_Lod4MultiSurfaceNode
+                    || node == NodeType::VEG_Lod1MultiSurfaceNode
+                    || node == NodeType::VEG_Lod2MultiSurfaceNode
+                    || node == NodeType::VEG_Lod3MultiSurfaceNode
+                    || node == NodeType::VEG_Lod4MultiSurfaceNode) {
 
             return true;
         }
