@@ -15,12 +15,12 @@
 
 namespace citygml {
 
-    CityGMLDocumentParser::CityGMLDocumentParser(const ParserParams& params, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase> tesselator)
+    CityGMLDocumentParser::CityGMLDocumentParser(const ParserParams& params, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase>&& tesselator)
     {
         m_logger = logger;
         m_factory = std::unique_ptr<CityGMLFactory>(new CityGMLFactory(logger));
         m_parserParams = params;
-        m_tesselator = std::move(tesselator);
+        m_tesselator = std::forward<std::unique_ptr<TesselatorBase>>(tesselator);
         m_activeParser = nullptr;
         m_currentElementUnknownOrUnexpected = false;
         m_unknownElementOrUnexpectedElementDepth = 0;
