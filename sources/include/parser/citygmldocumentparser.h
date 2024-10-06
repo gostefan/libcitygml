@@ -15,7 +15,7 @@ namespace citygml {
 
     class CityGMLDocumentParser {
     public:
-        CityGMLDocumentParser(const ParserParams& params, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase> tesselator);
+        CityGMLDocumentParser(const ParserParams& params, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase>&& tesselator);
 
         std::shared_ptr<const CityModel> getModel();
 
