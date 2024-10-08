@@ -15,7 +15,7 @@
 
 namespace citygml {
 
-    CityGMLDocumentParser::CityGMLDocumentParser(const ParserParams& params, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase>&& tesselator)
+    CityGMLDocumentParser::CityGMLDocumentParser(const ParserParams& params, std::shared_ptr<CityGMLLogger> const& logger, std::unique_ptr<TesselatorBase>&& tesselator)
     {
         m_logger = logger;
         m_factory = std::unique_ptr<CityGMLFactory>(new CityGMLFactory(logger));

@@ -118,7 +118,7 @@ protected:
 class CityGMLHandlerXerces : public xercesc::DefaultHandler, public citygml::CityGMLDocumentParser
 {
 public:
-    CityGMLHandlerXerces( const ParserParams& params, const std::string& fileName, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase>&& tesselator)
+    CityGMLHandlerXerces( const ParserParams& params, const std::string& fileName, std::shared_ptr<CityGMLLogger> const& logger, std::unique_ptr<TesselatorBase>&& tesselator)
         : citygml::CityGMLDocumentParser(params, logger, std::forward<std::unique_ptr<TesselatorBase>>(tesselator)), m_documentLocation(DocumentLocationXercesAdapter(fileName)) {}
 
 
@@ -249,7 +249,7 @@ namespace citygml
     std::mutex xerces_init_mutex;
     bool xerces_initialized;
 
-    bool initXerces(std::shared_ptr<CityGMLLogger> logger) {
+    bool initXerces(std::shared_ptr<CityGMLLogger> const& logger) {
 
         if (xerces_initialized) {
             return true;
@@ -273,7 +273,7 @@ namespace citygml
 
     }
 
-    std::shared_ptr<const CityModel> parse(xercesc::InputSource& stream, const ParserParams& params, std::shared_ptr<CityGMLLogger> logger, std::unique_ptr<TesselatorBase>&& tesselator, std::string filename = "") {
+    std::shared_ptr<const CityModel> parse(xercesc::InputSource& stream, const ParserParams& params, std::shared_ptr<CityGMLLogger> const& logger, std::unique_ptr<TesselatorBase>&& tesselator, std::string filename = "") {
 
 
 
