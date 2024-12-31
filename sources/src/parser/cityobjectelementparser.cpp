@@ -99,7 +99,6 @@ namespace citygml {
                 typeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgeConstructionElement));
                 typeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgeInstallation));
                 typeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgePart));
-                typeIDTypeMap.insert(HANDLE_TYPE(CON, FillingSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(CON, WindowSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(CON, DoorSurface));
                 typeIDTypeMap.insert(HANDLE_TYPE(BLDG, WallSurface));

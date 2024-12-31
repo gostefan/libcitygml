@@ -85,7 +85,6 @@ namespace citygml {
             COT_Waterway,
             COT_BuildingConstructiveElement,
             COT_BuildingRoom,
-            COT_FillingSurface,
             COT_WindowSurface,
             COT_DoorSurface,
 
