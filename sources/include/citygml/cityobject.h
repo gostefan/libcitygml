@@ -42,7 +42,6 @@ namespace citygml {
             COT_SolitaryVegetationObject,
             COT_WaterBody,
             COT_ReliefFeature,
-            COT_ReliefComponent,
             COT_TINRelief,
             COT_MassPointRelief,
             COT_BreaklineRelief,
