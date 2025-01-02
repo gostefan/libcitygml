@@ -32,7 +32,6 @@ namespace citygml {
         virtual FeatureObject* getFeatureObject() override;
 
     private:
-        static void initializeAttributesSet();
         static AttributeType getAttributeType(const NodeType::XMLNode& node);
 
         CityObject* m_model;
@@ -41,12 +40,6 @@ namespace citygml {
         AttributeType m_lastAttributeType;
         CityObjectsTypeMask const m_typeMask; // TODO: Make this a reference once getParserParams doesn't return a copy
         bool m_skipped;
-
-        // The nodes that are valid CityObjects
-        static std::mutex initializedAttributeSetMutex;
-        static std::unordered_set<int> attributesSet;
-        static std::unordered_map<int, AttributeType> attributeTypeMap;
-        static bool attributesSetInitialized;
 
         void parseGeometryForLODLevel(int lod);
         void parseGeometryForLODLevel(int lod, CityObject::CityObjectsType parentType);

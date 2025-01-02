@@ -23,13 +23,6 @@
 
 namespace citygml {
 
-    bool CityObjectElementParser::attributesSetInitialized = false;
-
-    std::unordered_set<int> CityObjectElementParser::attributesSet = std::unordered_set<int>();
-    std::unordered_map<int, AttributeType> CityObjectElementParser::attributeTypeMap;
-
-    std::mutex CityObjectElementParser::initializedAttributeSetMutex;
-
     #define HANDLE_TYPE( prefix, elementName ) std::pair<int, CityObject::CityObjectsType>(NodeType::prefix ## _ ## elementName ## Node.typeID(), CityObject::CityObjectsType::COT_## elementName)
     #define HANDLE_GROUP_TYPE( prefix, elementName, enumtype ) std::pair<int, CityObject::CityObjectsType>(NodeType::prefix ## _ ## elementName ## Node.typeID(), enumtype)
     #define HANDLE_ATTR( prefix, elementName ) NodeType::prefix ## _ ## elementName ## Node.typeID()
@@ -118,110 +111,113 @@ namespace citygml {
             return typeIDTypeMap;
         }
 
-    } // anonymous namespace
-
-    void CityObjectElementParser::initializeAttributesSet()
-    {
-        // double-checked lock
-        if (!attributesSetInitialized) {
-            std::lock_guard<std::mutex> lock(CityObjectElementParser::initializedAttributeSetMutex);
-
-            if (!attributesSetInitialized) {
-                attributesSet.insert(HANDLE_ATTR(CORE, CreationDate));
-                attributesSet.insert(HANDLE_ATTR(CORE, TerminationDate));
-                attributesSet.insert(HANDLE_ATTR(BLDG, Type));
-                attributesSet.insert(HANDLE_ATTR(BLDG, Class));
-                attributesSet.insert(HANDLE_ATTR(BLDG, Function));
-                attributesSet.insert(HANDLE_ATTR(BLDG, Usage));
-                attributesSet.insert(HANDLE_ATTR(BLDG, YearOfConstruction));
-                attributesSet.insert(HANDLE_ATTR(BLDG, YearOfDemolition));
-                attributesSet.insert(HANDLE_ATTR(BLDG, StoreyHeightsAboveGround));
-                attributesSet.insert(HANDLE_ATTR(BLDG, StoreyHeightsBelowGround));
-                attributesSet.insert(HANDLE_ATTR(BLDG, StoreysBelowGround));
-                attributesSet.insert(HANDLE_ATTR(BLDG, StoreysAboveGround));
-                attributesSet.insert(HANDLE_ATTR(BLDG, MeasuredHeight));
-                attributesSet.insert(HANDLE_ATTR(BLDG, RoofType));
-                attributesSet.insert(HANDLE_ATTR(VEG, Class ));
-                attributesSet.insert(HANDLE_ATTR(VEG, Function ));
-                attributesSet.insert(HANDLE_ATTR(VEG, AverageHeight ));
-                attributesSet.insert(HANDLE_ATTR(VEG, Species ));
-                attributesSet.insert(HANDLE_ATTR(VEG, Height ));
-                attributesSet.insert(HANDLE_ATTR(VEG, TrunkDiameter ));
-                attributesSet.insert(HANDLE_ATTR(VEG, CrownDiameter ));
-                attributesSet.insert(HANDLE_ATTR(FRN, Class));
-                attributesSet.insert(HANDLE_ATTR(FRN, Function));
-                attributesSet.insert(HANDLE_ATTR(GRP, Class));
-                attributesSet.insert(HANDLE_ATTR(GRP, Function));
-                attributesSet.insert(HANDLE_ATTR(GRP, Usage));
-                attributesSet.insert(HANDLE_ATTR(GEN, Class));
-                attributesSet.insert(HANDLE_ATTR(GEN, Function));
-                attributesSet.insert(HANDLE_ATTR(GEN, Usage));
-                attributesSet.insert(HANDLE_ATTR(GEN, Area));
-                attributesSet.insert(HANDLE_ATTR(GEN, SpaceType));
-                attributesSet.insert(HANDLE_ATTR(GEN, Volume));
-                attributesSet.insert(HANDLE_ATTR(LUSE, Class));
-                attributesSet.insert(HANDLE_ATTR(LUSE, Function));
-                attributesSet.insert(HANDLE_ATTR(LUSE, Usage));
-                attributesSet.insert(HANDLE_ATTR(DEM, Lod));
-                attributesSet.insert(HANDLE_ATTR(TRANS, Usage));
-                attributesSet.insert(HANDLE_ATTR(TRANS, Function));
-                attributesSet.insert(HANDLE_ATTR(TRANS, SurfaceMaterial));
-                attributesSet.insert(HANDLE_ATTR(TRANS, Granularity));
-                attributesSet.insert(HANDLE_ATTR(WTR, Class));
-                attributesSet.insert(HANDLE_ATTR(WTR, Function));
-                attributesSet.insert(HANDLE_ATTR(WTR, Usage));
-                attributesSet.insert(HANDLE_ATTR(WTR, WaterLevel));
-
-
-                attributeTypeMap[HANDLE_ATTR(CORE, CreationDate)] = AttributeType::Date;
-                attributeTypeMap[HANDLE_ATTR(CORE, TerminationDate)] = AttributeType::Date;
-                attributeTypeMap[HANDLE_ATTR(BLDG, Type)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(BLDG, Class)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(BLDG, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(BLDG, Usage)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(BLDG, YearOfConstruction)] = AttributeType::Date;
-                attributeTypeMap[HANDLE_ATTR(BLDG, YearOfDemolition)] = AttributeType::Date;
-                attributeTypeMap[HANDLE_ATTR(BLDG, StoreyHeightsAboveGround)] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(BLDG, StoreyHeightsBelowGround)] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(BLDG, StoreysBelowGround)] = AttributeType::Integer;
-                attributeTypeMap[HANDLE_ATTR(BLDG, StoreysAboveGround)] = AttributeType::Integer;
-                attributeTypeMap[HANDLE_ATTR(BLDG, MeasuredHeight)] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(BLDG, RoofType)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(VEG, Class )] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(VEG, Function )] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(VEG, AverageHeight )] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(VEG, Species )] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(VEG, Height )] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(VEG, TrunkDiameter )] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(VEG, CrownDiameter )] = AttributeType::Double;
-                attributeTypeMap[HANDLE_ATTR(FRN, Class)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(FRN, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GRP, Class)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GRP, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GRP, Usage)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GEN, Class)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GEN, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GEN, Usage)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GEN, Area)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GEN, SpaceType)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(GEN, Volume)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(LUSE, Class)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(LUSE, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(LUSE, Usage)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(DEM, Lod)] = AttributeType::Integer;
-                attributeTypeMap[HANDLE_ATTR(TRANS, Usage)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(TRANS, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(TRANS, SurfaceMaterial)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(TRANS, Granularity)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(WTR, Class)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(WTR, Function)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(WTR, Usage)] = AttributeType::String;
-                attributeTypeMap[HANDLE_ATTR(WTR, WaterLevel)] = AttributeType::Double;
-
-                attributesSetInitialized = true;
-            }
+        std::unordered_set<int> const& getAttributesSet()
+        {
+            static std::unordered_set<int> attributesSet = [](){
+                std::unordered_set<int> tmpAttributesSet;
+                tmpAttributesSet.insert(HANDLE_ATTR(CORE, CreationDate));
+                tmpAttributesSet.insert(HANDLE_ATTR(CORE, TerminationDate));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, Type));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, Class));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, Usage));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, YearOfConstruction));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, YearOfDemolition));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, StoreyHeightsAboveGround));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, StoreyHeightsBelowGround));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, StoreysBelowGround));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, StoreysAboveGround));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, MeasuredHeight));
+                tmpAttributesSet.insert(HANDLE_ATTR(BLDG, RoofType));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, Class ));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, Function ));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, AverageHeight ));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, Species ));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, Height ));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, TrunkDiameter ));
+                tmpAttributesSet.insert(HANDLE_ATTR(VEG, CrownDiameter ));
+                tmpAttributesSet.insert(HANDLE_ATTR(FRN, Class));
+                tmpAttributesSet.insert(HANDLE_ATTR(FRN, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(GRP, Class));
+                tmpAttributesSet.insert(HANDLE_ATTR(GRP, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(GRP, Usage));
+                tmpAttributesSet.insert(HANDLE_ATTR(GEN, Class));
+                tmpAttributesSet.insert(HANDLE_ATTR(GEN, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(GEN, Usage));
+                tmpAttributesSet.insert(HANDLE_ATTR(GEN, Area));
+                tmpAttributesSet.insert(HANDLE_ATTR(GEN, SpaceType));
+                tmpAttributesSet.insert(HANDLE_ATTR(GEN, Volume));
+                tmpAttributesSet.insert(HANDLE_ATTR(LUSE, Class));
+                tmpAttributesSet.insert(HANDLE_ATTR(LUSE, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(LUSE, Usage));
+                tmpAttributesSet.insert(HANDLE_ATTR(DEM, Lod));
+                tmpAttributesSet.insert(HANDLE_ATTR(TRANS, Usage));
+                tmpAttributesSet.insert(HANDLE_ATTR(TRANS, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(TRANS, SurfaceMaterial));
+                tmpAttributesSet.insert(HANDLE_ATTR(TRANS, Granularity));
+                tmpAttributesSet.insert(HANDLE_ATTR(WTR, Class));
+                tmpAttributesSet.insert(HANDLE_ATTR(WTR, Function));
+                tmpAttributesSet.insert(HANDLE_ATTR(WTR, Usage));
+                tmpAttributesSet.insert(HANDLE_ATTR(WTR, WaterLevel));
+                return tmpAttributesSet;
+            }();
+            return attributesSet;
         }
-    }
+
+        std::unordered_map<int, AttributeType> const& getAttributesTypeMap()
+        {
+            static std::unordered_map<int, AttributeType> attributesTypeMap = [](){
+                std::unordered_map<int, AttributeType> tmpAttributesTypeMap;
+                tmpAttributesTypeMap[HANDLE_ATTR(CORE, CreationDate)] = AttributeType::Date;
+                tmpAttributesTypeMap[HANDLE_ATTR(CORE, TerminationDate)] = AttributeType::Date;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, Type)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, Class)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, Usage)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, YearOfConstruction)] = AttributeType::Date;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, YearOfDemolition)] = AttributeType::Date;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, StoreyHeightsAboveGround)] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, StoreyHeightsBelowGround)] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, StoreysBelowGround)] = AttributeType::Integer;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, StoreysAboveGround)] = AttributeType::Integer;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, MeasuredHeight)] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(BLDG, RoofType)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, Class )] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, Function )] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, AverageHeight )] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, Species )] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, Height )] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, TrunkDiameter )] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(VEG, CrownDiameter )] = AttributeType::Double;
+                tmpAttributesTypeMap[HANDLE_ATTR(FRN, Class)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(FRN, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GRP, Class)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GRP, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GRP, Usage)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GEN, Class)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GEN, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GEN, Usage)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GEN, Area)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GEN, SpaceType)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(GEN, Volume)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(LUSE, Class)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(LUSE, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(LUSE, Usage)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(DEM, Lod)] = AttributeType::Integer;
+                tmpAttributesTypeMap[HANDLE_ATTR(TRANS, Usage)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(TRANS, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(TRANS, SurfaceMaterial)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(TRANS, Granularity)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(WTR, Class)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(WTR, Function)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(WTR, Usage)] = AttributeType::String;
+                tmpAttributesTypeMap[HANDLE_ATTR(WTR, WaterLevel)] = AttributeType::Double;
+                return tmpAttributesTypeMap;
+            }();
+            return attributesTypeMap;
+        }
+
+    } // anonymous namespace
 
     AttributeType CityObjectElementParser::getAttributeType(const NodeType::XMLNode& node)
     {
@@ -285,7 +281,6 @@ namespace citygml {
         if (m_skipped) {
             return false;
         }
-        initializeAttributesSet();
 
         if (m_model == nullptr) {
             throw std::runtime_error("CityObjectElementParser::parseChildElementStartTag called before CityObjectElementParser::parseElementStartTag");
@@ -299,7 +294,7 @@ namespace citygml {
 
             m_lastAttributeName = attributes.getAttribute("name");
             m_lastAttributeType = getAttributeType(node);
-        } else if (attributesSet.count(node.typeID()) > 0 || node == NodeType::GEN_ValueNode) {
+        } else if (getAttributesSet().count(node.typeID()) > 0 || node == NodeType::GEN_ValueNode) {
 
             return true;
         } else if (node == NodeType::GML_RectifiedGridCoverageNode) {
@@ -508,8 +503,6 @@ namespace citygml {
             throw std::runtime_error("CityObjectElementParser::parseChildElementEndTag called before CityObjectElementParser::parseElementStartTag");
         }
 
-        initializeAttributesSet();
-
         if (    node == NodeType::GEN_StringAttributeNode
              || node == NodeType::GEN_DoubleAttributeNode
              || node == NodeType::GEN_IntAttributeNode
@@ -529,9 +522,9 @@ namespace citygml {
             }
 
             return true;
-        } else if (attributesSet.count(node.typeID()) > 0) {
+        } else if (getAttributesSet().count(node.typeID()) > 0) {
             if (!characters.empty()) {
-                m_model->setAttribute(node.name(), characters, attributeTypeMap.at(node.typeID()));
+                m_model->setAttribute(node.name(), characters, getAttributesTypeMap().at(node.typeID()));
             }
             return true;
         } else if (node == NodeType::BLDG_BoundedByNode
