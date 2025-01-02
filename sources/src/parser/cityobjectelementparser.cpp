@@ -24,7 +24,6 @@
 namespace citygml {
 
     #define HANDLE_TYPE( prefix, elementName ) std::pair<int, CityObject::CityObjectsType>(NodeType::prefix ## _ ## elementName ## Node.typeID(), CityObject::CityObjectsType::COT_## elementName)
-    #define HANDLE_GROUP_TYPE( prefix, elementName, enumtype ) std::pair<int, CityObject::CityObjectsType>(NodeType::prefix ## _ ## elementName ## Node.typeID(), enumtype)
     #define HANDLE_ATTR( prefix, elementName ) NodeType::prefix ## _ ## elementName ## Node.typeID()
 
     CityObjectElementParser::CityObjectElementParser(CityGMLDocumentParser& documentParser, CityGMLFactory& factory, std::shared_ptr<CityGMLLogger> logger, std::function<void (CityObject*)> callback)
@@ -79,9 +78,9 @@ namespace citygml {
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(VEG, PlantCover));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(VEG, SolitaryVegetationObject));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(WTR, WaterBody));
-                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterSurface, CityObject::CityObjectsType::COT_WaterBody));
-                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterGroundSurface, CityObject::CityObjectsType::COT_WaterBody));
-                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterClosureSurface, CityObject::CityObjectsType::COT_WaterBody));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(WTR, WaterSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(WTR, WaterGroundSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(WTR, WaterClosureSurface));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(LUSE, LandUse));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(SUB, Tunnel));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(BRID, Bridge));

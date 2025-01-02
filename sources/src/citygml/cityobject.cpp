@@ -245,6 +245,12 @@ namespace citygml {
             return "SolitaryVegetationObject";
         case CityObject::CityObjectsType::COT_WaterBody:
             return "WaterBody";
+        case CityObject::CityObjectsType::COT_WaterSurface:
+            return "WaterSurface";
+        case CityObject::CityObjectsType::COT_WaterGroundSurface:
+            return "WaterGroundSurface";
+        case CityObject::CityObjectsType::COT_WaterClosureSurface:
+            return "WaterClosureSurface";
         case CityObject::CityObjectsType::COT_ReliefFeature:
             return "ReliefFeature";
         case CityObject::CityObjectsType::COT_LandUse:
@@ -325,6 +331,9 @@ namespace citygml {
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_PlantCover), CityObject::CityObjectsType::COT_PlantCover},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_SolitaryVegetationObject), CityObject::CityObjectsType::COT_SolitaryVegetationObject},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_WaterBody), CityObject::CityObjectsType::COT_WaterBody},
+         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_WaterSurface), CityObject::CityObjectsType::COT_WaterSurface},
+         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_WaterGroundSurface), CityObject::CityObjectsType::COT_WaterGroundSurface},
+         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_WaterClosureSurface), CityObject::CityObjectsType::COT_WaterClosureSurface},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_ReliefFeature), CityObject::CityObjectsType::COT_ReliefFeature},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_LandUse), CityObject::CityObjectsType::COT_LandUse},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_Tunnel), CityObject::CityObjectsType::COT_Tunnel},
