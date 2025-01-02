@@ -44,7 +44,7 @@ namespace citygml {
 
     namespace {
 
-        std::unordered_map<int, CityObject::CityObjectsType> getTypeIDTypeMap()
+        std::unordered_map<int, CityObject::CityObjectsType> const& getTypeIDTypeMap()
         {
             static std::unordered_map<int, CityObject::CityObjectsType> typeIDTypeMap = [](){
                 std::unordered_map<int, CityObject::CityObjectsType> tmpTypeIDTypeMap;
