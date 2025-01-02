@@ -279,8 +279,12 @@ namespace citygml {
             return "OuterCeilingSurface";
         case CityObject::CityObjectsType::COT_OuterFloorSurface:
             return "OuterFloorSurface";
-        case CityObject::CityObjectsType::COT_TransportationObject:
-            return "TransportationObject";
+        case CityObject::CityObjectsType::COT_TransportationComplex:
+            return "TransportationComplex";
+        case CityObject::CityObjectsType::COT_TrafficArea:
+            return "TrafficArea";
+        case CityObject::CityObjectsType::COT_AuxiliaryTrafficArea:
+            return "AuxiliaryTrafficArea";
         case CityObject::CityObjectsType::COT_IntBuildingInstallation:
 	        return "IntBuildingInstallation";
         case CityObject::CityObjectsType::COT_GenericOccupiedSpace:
@@ -338,7 +342,9 @@ namespace citygml {
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_CeilingSurface), CityObject::CityObjectsType::COT_CeilingSurface},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_OuterCeilingSurface), CityObject::CityObjectsType::COT_OuterCeilingSurface},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_OuterFloorSurface), CityObject::CityObjectsType::COT_OuterFloorSurface},
-         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_TransportationObject), CityObject::CityObjectsType::COT_TransportationObject},
+         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_TransportationComplex), CityObject::CityObjectsType::COT_TransportationComplex},
+         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_TrafficArea), CityObject::CityObjectsType::COT_TrafficArea},
+         {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_AuxiliaryTrafficArea), CityObject::CityObjectsType::COT_AuxiliaryTrafficArea},
 	     {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_IntBuildingInstallation), CityObject::CityObjectsType::COT_IntBuildingInstallation},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_GenericOccupiedSpace), CityObject::CityObjectsType::COT_GenericOccupiedSpace},
          {cityObjectsTypeToLowerString(CityObject::CityObjectsType::COT_GenericUnoccupiedSpace), CityObject::CityObjectsType::COT_GenericUnoccupiedSpace},

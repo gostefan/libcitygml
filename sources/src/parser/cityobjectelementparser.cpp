@@ -71,9 +71,9 @@ namespace citygml {
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Intersection));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Section));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Waterway));
-                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, TransportationComplex, CityObject::CityObjectsType::COT_TransportationObject));
-                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, TrafficArea, CityObject::CityObjectsType::COT_TransportationObject));
-                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, AuxiliaryTrafficArea, CityObject::CityObjectsType::COT_TransportationObject));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, TransportationComplex));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, TrafficArea));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, AuxiliaryTrafficArea));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, TrafficSpace));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, AuxiliaryTrafficSpace));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(VEG, PlantCover));
