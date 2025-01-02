@@ -32,8 +32,6 @@ namespace citygml {
         virtual FeatureObject* getFeatureObject() override;
 
     private:
-        static AttributeType getAttributeType(const NodeType::XMLNode& node);
-
         CityObject* m_model;
         std::function<void(CityObject*)> m_callback;
         std::string m_lastAttributeName;

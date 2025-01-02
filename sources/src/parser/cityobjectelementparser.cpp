@@ -217,25 +217,25 @@ namespace citygml {
             return attributesTypeMap;
         }
 
-    } // anonymous namespace
-
-    AttributeType CityObjectElementParser::getAttributeType(const NodeType::XMLNode& node)
-    {
-        if (node == NodeType::GEN_StringAttributeNode) {
-            return AttributeType::String;
-        } else if (node == NodeType::GEN_DoubleAttributeNode) {
-            return AttributeType::Double;
-        } else if (node == NodeType::GEN_IntAttributeNode) {
-            return AttributeType::Integer;
-        } else if (node == NodeType::GEN_DateAttributeNode) {
-            return AttributeType::Date;
-        } else if (node == NodeType::GEN_UriAttributeNode) {
-            return AttributeType::Uri;
-        } else {
-            // fallback to string for other types
-            return AttributeType::String;
+        AttributeType getAttributeType(const NodeType::XMLNode& node)
+        {
+            if (node == NodeType::GEN_StringAttributeNode) {
+                return AttributeType::String;
+            } else if (node == NodeType::GEN_DoubleAttributeNode) {
+                return AttributeType::Double;
+            } else if (node == NodeType::GEN_IntAttributeNode) {
+                return AttributeType::Integer;
+            } else if (node == NodeType::GEN_DateAttributeNode) {
+                return AttributeType::Date;
+            } else if (node == NodeType::GEN_UriAttributeNode) {
+                return AttributeType::Uri;
+            } else {
+                // fallback to string for other types
+                return AttributeType::String;
+            }
         }
-    }
+
+    } // anonymous namespace
 
     bool CityObjectElementParser::handlesElement(const NodeType::XMLNode& node) const
     {
