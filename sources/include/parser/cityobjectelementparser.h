@@ -32,7 +32,6 @@ namespace citygml {
         virtual FeatureObject* getFeatureObject() override;
 
     private:
-        static void initializeTypeIDTypeMap();
         static void initializeAttributesSet();
         static AttributeType getAttributeType(const NodeType::XMLNode& node);
 
@@ -44,10 +43,6 @@ namespace citygml {
         bool m_skipped;
 
         // The nodes that are valid CityObjects
-        static std::mutex initializedTypeIDMutex;
-        static std::unordered_map<int, CityObject::CityObjectsType> typeIDTypeMap;
-        static bool typeIDTypeMapInitialized;
-
         static std::mutex initializedAttributeSetMutex;
         static std::unordered_set<int> attributesSet;
         static std::unordered_map<int, AttributeType> attributeTypeMap;

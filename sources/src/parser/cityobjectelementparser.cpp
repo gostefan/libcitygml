@@ -23,14 +23,11 @@
 
 namespace citygml {
 
-    bool CityObjectElementParser::typeIDTypeMapInitialized = false;
     bool CityObjectElementParser::attributesSetInitialized = false;
 
-    std::unordered_map<int, CityObject::CityObjectsType> CityObjectElementParser::typeIDTypeMap = std::unordered_map<int, CityObject::CityObjectsType>();
     std::unordered_set<int> CityObjectElementParser::attributesSet = std::unordered_set<int>();
     std::unordered_map<int, AttributeType> CityObjectElementParser::attributeTypeMap;
 
-    std::mutex CityObjectElementParser::initializedTypeIDMutex;
     std::mutex CityObjectElementParser::initializedAttributeSetMutex;
 
     #define HANDLE_TYPE( prefix, elementName ) std::pair<int, CityObject::CityObjectsType>(NodeType::prefix ## _ ## elementName ## Node.typeID(), CityObject::CityObjectsType::COT_## elementName)
@@ -52,76 +49,76 @@ namespace citygml {
         return "CityObjectElementParser";
     }
 
-    void CityObjectElementParser::initializeTypeIDTypeMap()
-    {
-        // double-checked lock
-        if (!typeIDTypeMapInitialized) {
-            std::lock_guard<std::mutex> lock(CityObjectElementParser::initializedTypeIDMutex);
+    namespace {
 
-            if (!typeIDTypeMapInitialized) {
-                typeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericCityObject));
-                typeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericOccupiedSpace));
-                typeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericUnoccupiedSpace));
-                typeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericLogicalSpace));
-                typeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericThematicSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, Building));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingPart));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, Room));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingInstallation));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingFurniture));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingConstructiveElement));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingRoom));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, Door));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, Window));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, CityFurniture));
-                typeIDTypeMap.insert(HANDLE_TYPE(FRN, CityFurniture));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Track));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Road));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Railway));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Square));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Intersection));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Section));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, Waterway));
-                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, TransportationComplex, CityObject::CityObjectsType::COT_TransportationObject));
-                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, TrafficArea, CityObject::CityObjectsType::COT_TransportationObject));
-                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, AuxiliaryTrafficArea, CityObject::CityObjectsType::COT_TransportationObject));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, TrafficSpace));
-                typeIDTypeMap.insert(HANDLE_TYPE(TRANS, AuxiliaryTrafficSpace));
-                typeIDTypeMap.insert(HANDLE_TYPE(VEG, PlantCover));
-                typeIDTypeMap.insert(HANDLE_TYPE(VEG, SolitaryVegetationObject));
-                typeIDTypeMap.insert(HANDLE_TYPE(WTR, WaterBody));
-                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterSurface, CityObject::CityObjectsType::COT_WaterBody));
-                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterGroundSurface, CityObject::CityObjectsType::COT_WaterBody));
-                typeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterClosureSurface, CityObject::CityObjectsType::COT_WaterBody));
-                typeIDTypeMap.insert(HANDLE_TYPE(LUSE, LandUse));
-                typeIDTypeMap.insert(HANDLE_TYPE(SUB, Tunnel));
-                typeIDTypeMap.insert(HANDLE_TYPE(BRID, Bridge));
-                typeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgeConstructionElement));
-                typeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgeInstallation));
-                typeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgePart));
-                typeIDTypeMap.insert(HANDLE_TYPE(CON, WindowSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(CON, DoorSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, WallSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, RoofSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, GroundSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, ClosureSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, FloorSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, InteriorWallSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, CeilingSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterCeilingSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterFloorSurface));
-                typeIDTypeMap.insert(HANDLE_TYPE(GRP, CityObjectGroup));
-                typeIDTypeMap.insert(HANDLE_TYPE(DEM, ReliefFeature));
-                typeIDTypeMap.insert(HANDLE_TYPE(DEM, TINRelief));
-                typeIDTypeMap.insert(HANDLE_TYPE(DEM, MassPointRelief));
-                typeIDTypeMap.insert(HANDLE_TYPE(DEM, BreaklineRelief));
-                typeIDTypeMap.insert(HANDLE_TYPE(DEM, RasterRelief));
-                typeIDTypeMap.insert(HANDLE_TYPE(BLDG, IntBuildingInstallation));
-
-                typeIDTypeMapInitialized = true;
-            }
+        std::unordered_map<int, CityObject::CityObjectsType> getTypeIDTypeMap()
+        {
+            static std::unordered_map<int, CityObject::CityObjectsType> typeIDTypeMap = [](){
+                std::unordered_map<int, CityObject::CityObjectsType> tmpTypeIDTypeMap;
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericCityObject));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericOccupiedSpace));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericUnoccupiedSpace));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericLogicalSpace));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericThematicSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, Building));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingPart));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, Room));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingInstallation));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingFurniture));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingConstructiveElement));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingRoom));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, Door));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, Window));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, CityFurniture));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(FRN, CityFurniture));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Track));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Road));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Railway));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Square));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Intersection));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Section));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Waterway));
+                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, TransportationComplex, CityObject::CityObjectsType::COT_TransportationObject));
+                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, TrafficArea, CityObject::CityObjectsType::COT_TransportationObject));
+                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(TRANS, AuxiliaryTrafficArea, CityObject::CityObjectsType::COT_TransportationObject));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, TrafficSpace));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, AuxiliaryTrafficSpace));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(VEG, PlantCover));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(VEG, SolitaryVegetationObject));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(WTR, WaterBody));
+                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterSurface, CityObject::CityObjectsType::COT_WaterBody));
+                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterGroundSurface, CityObject::CityObjectsType::COT_WaterBody));
+                tmpTypeIDTypeMap.insert(HANDLE_GROUP_TYPE(WTR, WaterClosureSurface, CityObject::CityObjectsType::COT_WaterBody));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(LUSE, LandUse));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(SUB, Tunnel));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BRID, Bridge));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgeConstructionElement));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgeInstallation));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BRID, BridgePart));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(CON, WindowSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(CON, DoorSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, WallSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, RoofSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, GroundSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, ClosureSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, FloorSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, InteriorWallSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, CeilingSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterCeilingSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, OuterFloorSurface));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(GRP, CityObjectGroup));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(DEM, ReliefFeature));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(DEM, TINRelief));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(DEM, MassPointRelief));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(DEM, BreaklineRelief));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(DEM, RasterRelief));
+                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, IntBuildingInstallation));
+                return tmpTypeIDTypeMap;
+            }();
+            return typeIDTypeMap;
         }
-    }
+
+    } // anonymous namespace
 
     void CityObjectElementParser::initializeAttributesSet()
     {
@@ -246,18 +243,14 @@ namespace citygml {
 
     bool CityObjectElementParser::handlesElement(const NodeType::XMLNode& node) const
     {
-        initializeTypeIDTypeMap();
-
-        return typeIDTypeMap.count(node.typeID()) > 0;
+        return getTypeIDTypeMap().count(node.typeID()) > 0;
     }
 
     bool CityObjectElementParser::parseElementStartTag(const NodeType::XMLNode& node, Attributes& attributes)
     {
-        initializeTypeIDTypeMap();
+        auto it = getTypeIDTypeMap().find(node.typeID());
 
-        auto it = typeIDTypeMap.find(node.typeID());
-
-        if (it == typeIDTypeMap.end()) {
+        if (it == getTypeIDTypeMap().end()) {
             CITYGML_LOG_ERROR(m_logger, "Expected start tag of CityObject but got <" << node.name() << "> at " << getDocumentLocation());
             throw std::runtime_error("Unexpected start tag found.");
         }
