@@ -290,8 +290,6 @@ namespace citygml {
                 INITIALIZE_NODE( BLDG, BuildingConstructiveElement)
                 INITIALIZE_NODE( BLDG, BuildingRoom)
 
-                INITIALIZE_NODE( BLDG, CityFurniture )
-
                 INITIALIZE_NODE( BLDG, Address)
 
                 // ADDRESS
@@ -709,8 +707,6 @@ namespace citygml {
     DEFINE_NODE( BLDG, IntBuildingInstallation)
     DEFINE_NODE( BLDG, BuildingConstructiveElement)
     DEFINE_NODE( BLDG, BuildingRoom)
-
-    DEFINE_NODE( BLDG, CityFurniture )
 
     DEFINE_NODE( BLDG, Address)
 

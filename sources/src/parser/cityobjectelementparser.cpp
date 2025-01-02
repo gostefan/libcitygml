@@ -61,7 +61,6 @@ namespace citygml {
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, BuildingRoom));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, Door));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, Window));
-                tmpTypeIDTypeMap.insert(HANDLE_TYPE(BLDG, CityFurniture));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(FRN, CityFurniture));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Track));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(TRANS, Road));

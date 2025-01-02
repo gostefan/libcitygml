@@ -240,8 +240,7 @@ namespace citygml {
         NODETYPE( BLDG, IntBuildingInstallation)
         NODETYPE( BLDG, BuildingConstructiveElement)
         NODETYPE( BLDG, BuildingRoom)
-            
-        NODETYPE( BLDG, CityFurniture )
+
         NODETYPE( BLDG, Address)
 
         // CityFurniture
