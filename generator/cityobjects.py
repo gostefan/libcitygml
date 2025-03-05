@@ -108,6 +108,42 @@ def getCityObjectTypesFromHeader():
 	enums = [enum for enum in enums if enum[0] != 'COT_All']
 	return enums
 
+'''
+def output_cursor_and_children(cursor, main_file, level=0):
+    """ Output this cursor and its children with minimal formatting """
+    if cursor.spelling.startswith('_'):
+        return
+    if cursor.location.file and cursor.location.file.name == main_file or cursor.spelling == main_file:
+        output_cursor(cursor, level)
+        if cursor.kind.is_reference():
+            print(indent(level) + 'reference to:')
+            # output_cursor(clang.cindex.Cursor_ref(cursor), level + 1)
+
+        # Recurse for children of this cursor
+        has_children = False
+        for c in cursor.get_children():
+            if not has_children:
+                print(indent(level) + '{')
+                has_children = True
+            output_cursor_and_children(c, main_file, level + 1)
+
+        if has_children:
+            print(indent(level) + '}')
+
+def output_cursor(cursor, level):
+    """ Low level cursor output """
+    spelling = cursor.spelling if cursor.spelling else ''
+    displayname = cursor.displayname if cursor.displayname else ''
+    kind = cursor.kind
+
+    print(indent(level) + spelling, '<' + str(kind) + '>')
+    print(indent(level + 1) + '"' + displayname + '"')
+
+def indent(level):
+    """ Indentation string for pretty-printing """
+    return '  ' * level
+'''
+
 def parseTypeMapInsert(node):
     node = next(node.get_children(), None)
     node = next((child for child in node.get_children() if child.kind == clang.cindex.CursorKind.UNEXPOSED_EXPR), None)

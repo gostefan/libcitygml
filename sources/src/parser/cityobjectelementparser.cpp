@@ -47,6 +47,7 @@ namespace citygml {
         {
             static std::unordered_map<int, CityObject::CityObjectsType> typeIDTypeMap = [](){
                 std::unordered_map<int, CityObject::CityObjectsType> tmpTypeIDTypeMap;
+                // GEN
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericCityObject));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericOccupiedSpace));
                 tmpTypeIDTypeMap.insert(HANDLE_TYPE(GEN, GenericUnoccupiedSpace));
