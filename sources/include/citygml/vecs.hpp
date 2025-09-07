@@ -300,17 +300,6 @@ typedef TVec3< float >			TVec3f;
 typedef TVec3< double >			TVec3d;
 
 
-//std::istream& operator>>(std::istream & is, TVec3d & v)
-//{
-//    return is >> v.x >> v.y >> v.z;
-//}
-
-//std::istream& operator>>(std::istream & is, TVec3f & v)
-//{
-//    return is >> v.x >> v.y >> v.z;
-//}
-
-
 // 4D vector class.
 
 template< class T > class TVec4
