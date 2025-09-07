@@ -12,14 +12,14 @@
 
 namespace citygml {
 
-    template <typename T, std::enable_if_t<std::is_floating_point_v<T>, bool> = true>
+    template <typename T, std::enable_if_t<std::is_fundamental_v<T>, bool> = true>
     char const* readNextValue(std::string_view view, T& target) {
         char const* end;
         std::tie(target, end) = readNextNumber<T>(view);
         return end;
     }
 
-    template <typename T, std::enable_if_t<!std::is_floating_point_v<T>, bool> = true>
+    template <typename T, std::enable_if_t<!std::is_fundamental_v<T>, bool> = true>
     char const* readNextValue(std::string_view view, T& target) {
          return target.fromString(view);
     }
