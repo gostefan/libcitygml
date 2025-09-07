@@ -1,8 +1,38 @@
 #pragma once
-#include <sstream>
+#include <array>
+#include <charconv>
 #include <iostream>
 #include <math.h>
+#include <stdexcept>
 #include <string.h>
+#include <string_view>
+#include <utility>
+
+// Utils
+
+template <typename T>
+std::pair<T, char const*> readNextNumber(std::string_view const& string) {
+    T result;
+    auto [patternEnd, errorCode] = std::from_chars(string.data(), string.data() + string.size(), result);
+    if (errorCode == std::errc()) {
+        return { result, patternEnd };
+    } else {
+        throw std::runtime_error("Cannot parse number.");
+    }
+}
+
+template <typename T, size_t N>
+void readNextNumbers(std::istream& is, std::array<T*, N> const& targets) {
+    std::string input;
+    char const* end;
+    for ( T* target : targets) {
+        if (is >> input) {
+            std::tie(*target, end) = readNextNumber<T>(input);
+        } else {
+            return;
+        }
+    }
+}
 
 // 2D vector class.
 
@@ -102,7 +132,8 @@ template<class T> inline std::ostream& operator<<(std::ostream & os, TVec2<T> co
 
 template<class T> inline std::istream& operator>>(std::istream & is, TVec2<T> & v)
 {
-    return is >> v.x >> v.y;
+    readNextNumbers(is, std::array<T*, 2>{ &v.x, &v.y });
+    return is;
 }
 
 typedef TVec2< float >			TVec2f;
@@ -263,7 +294,8 @@ template<class T> inline std::ostream& operator<<(std::ostream & os, const TVec3
 }
 
 template<class T> inline std::istream& operator>>(std::istream & is, TVec3<T> & v) {
-    return is >> v.x >> v.y >> v.z;
+    readNextNumbers(is, std::array<T*, 3>{ &v.x, &v.y, &v.z });
+    return is;
 }
 
 typedef TVec3< float >			TVec3f;
@@ -305,7 +337,8 @@ template<class T> inline std::ostream& operator<<( std::ostream & os, TVec4<T> c
 
 template<class T> inline std::istream& operator>>( std::istream & is, TVec4<T> & v )
 {
-    return is >> v.x >> v.y >> v.z >>  v.w;
+    readNextNumbers(is, std::array<T*, 4>{ &v.x, &v.y, &v.z, &v.w });
+    return is;
 }
 
 typedef TVec4< float >			TVec4f;
