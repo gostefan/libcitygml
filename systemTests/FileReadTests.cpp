@@ -150,6 +150,6 @@ TEST(FileReadTests, CommaFileSeparator) {
         std::locale::global(prevLocale);
     } catch (...) {
         std::locale::global(prevLocale);
-        throw;
+         throw;
     }
 }
