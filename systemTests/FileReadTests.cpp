@@ -10,7 +10,9 @@
 #include <gtest/gtest.h>
 
 #include <fstream>
+#include <locale>
 #include <memory>
+#include <stdexcept>
 #include <time.h>
 
 
@@ -127,6 +129,18 @@ void readFile(char const* fileName) {
 
 	std::cout << "Done.\n";
 }
+
+class LocaleModifier {
+public:
+    LocaleModifier(char const* newLocale) : previousLocale(std::locale::global(std::locale(newLocale))) {}
+
+    ~LocaleModifier() {
+        std::locale::global(previousLocale);
+    }
+
+private:
+    std::locale const previousLocale;
+};
 } // anonymous namespace
 
 TEST(FileReadTests, berlin_open_data_sample_data) {
@@ -137,6 +151,11 @@ TEST(FileReadTests, b1_lod2_s) {
 	readFile("../../data/b1_lod2_s.gml");
 }
 
-TEST(FileRedTests, FZK_Haus_LoD0_KIT_IAI_KHH_B36_V1) {
+TEST(FileReadTests, FZK_Haus_LoD0_KIT_IAI_KHH_B36_V1) {
 	readFile("../../data/FZK-Haus-LoD0-KIT-IAI-KHH-B36-V1.gml");
+}
+
+TEST(FileReadTests, CommaFileSeparator) {
+    LocaleModifier const localeModifier("de_DE.UTF-8");
+    readFile("../../data/FZK-Haus-LoD0-KIT-IAI-KHH-B36-V1.gml");
 }
