@@ -10,7 +10,9 @@
 #include <gtest/gtest.h>
 
 #include <fstream>
+#include <locale>
 #include <memory>
+#include <stdexcept>
 #include <time.h>
 
 
@@ -137,6 +139,17 @@ TEST(FileReadTests, b1_lod2_s) {
 	readFile("../../data/b1_lod2_s.gml");
 }
 
-TEST(FileRedTests, FZK_Haus_LoD0_KIT_IAI_KHH_B36_V1) {
+TEST(FileReadTests, FZK_Haus_LoD0_KIT_IAI_KHH_B36_V1) {
 	readFile("../../data/FZK-Haus-LoD0-KIT-IAI-KHH-B36-V1.gml");
+}
+
+TEST(FileReadTests, CommaFileSeparator) {
+    std::locale const prevLocale = std::locale::global(std::locale("de_DE.UTF-8"));
+    try {
+        readFile("../../data/FZK-Haus-LoD0-KIT-IAI-KHH-B36-V1.gml");
+        std::locale::global(prevLocale);
+    } catch (...) {
+        std::locale::global(prevLocale);
+        throw;
+    }
 }
